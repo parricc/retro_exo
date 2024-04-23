@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 # Linux Dependency Setup For eXo Collections
-# Revised: 2024-03-20
+# Revised: 2024-04-23
 
 #--------------------------------------------------------------------------------------
 clear
 
-setupversion="Version 6.00.universal1-alpha1"
+setupversion="Version 6.00.universal1-alpha2"
 
 [[ $0 == $BASH_SOURCE ]] && cd "$( dirname "$0")"
 scriptDir="$(cd "$( dirname "$BASH_SOURCE")" && pwd)"
@@ -113,6 +113,9 @@ function beginLinux
         else
             setupother
         fi
+    else
+        extractPackages
+        installflatpaks
     fi
     
     clear
