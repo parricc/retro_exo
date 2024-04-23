@@ -1,7 +1,7 @@
 Version 6.00.universal1-alpha2
-https://raw.githubusercontent.com/parricc/retro_exo/install_dependencies.cnew
-77f016c4c26e2cde7d6494e1ecc8247fa7f56069fc6ebf3ee5225c47fa0f409c  install_dependencies.cnew
-https://raw.githubusercontent.com/parricc/retro_exo/install_dependencies.bnew
-aef4cfa7027ff4f239b4459e65f1be42dd548cce2f54019344155f6264f55238  install_dependencies.bnew
-https://raw.githubusercontent.com/parricc/retro_exo/update_universalpackages_linuxmac.zip
+https://github.com/parricc/retro_exo/raw/main/install_dependencies.cnew
+f8119dc674d2740a4d8edfe38d8330abc2fa2352be834e9f895966a176b9d525  install_dependencies.cnew
+https://github.com/parricc/retro_exo/raw/main/install_dependencies.bnew
+ed38479a0d70232ca71bfc6798eb6304c3181b964c5775655d278c9c0961f5a3  install_dependencies.bnew
+https://github.com/parricc/retro_exo/raw/main/update_universalpackages_linuxmac.zip
 2a5d95233ed5a2f2e3f237af412052bd1f70485dfbbc3f357ef8d0d176b2bc8e  update_universalpackages_linuxmac.zip

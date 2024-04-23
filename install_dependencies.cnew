@@ -310,7 +310,7 @@ function goupdate
     [ -e "install_dependencies.cnew" ] && rm install_dependencies.cnew
     [ -e "install_dependencies.bnew" ] && rm install_dependencies.bnew
     [ -e "update_universalpackages_linuxmac.zip" ] && rm update_universalpackages_linuxmac.zip
-    wget "https://raw.githubusercontent.com/parricc/retro_exo/ver_universal_linuxmac.txt" -O ver_universal_linuxmac.txt
+    wget "https://github.com/parricc/retro_exo/raw/main/ver_universal_linuxmac.txt" -O ver_universal_linuxmac.txt
     if [ ! -e "ver_universal_linuxmac.txt" ]
     then
         printf "\n\e[1;31;47mFailed to retrieve update information.\e[0m\n\n"
