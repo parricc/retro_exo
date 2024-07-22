@@ -1,7 +1,7 @@
-Version 6.00.universal1-alpha2
-https://github.com/parricc/retro_exo/raw/main/install_dependencies.cnew
-f8119dc674d2740a4d8edfe38d8330abc2fa2352be834e9f895966a176b9d525  install_dependencies.cnew
-https://github.com/parricc/retro_exo/raw/main/install_dependencies.bnew
-ed38479a0d70232ca71bfc6798eb6304c3181b964c5775655d278c9c0961f5a3  install_dependencies.bnew
-https://github.com/parricc/retro_exo/raw/main/update_universalpackages_linuxmac.zip
+Version 6.04.universal1
+https://github.com/exoscoriae/eXoDOS/raw/master/linux_mac/install_dependencies.cnew
+9ad2083a0adac4c1556cbede2ff4f594daa80cc78a9ddc8e3ca96a903ee89dc1  install_dependencies.cnew
+https://github.com/exoscoriae/eXoDOS/raw/master/linux_mac/install_dependencies.bnew
+8b91f1d6b859dbb0be7b265baffb632f97ba806cd2a36f90c9cd4ffcac97a6d3  install_dependencies.bnew
+https://github.com/exoscoriae/eXoDOS/raw/master/linux_mac/update_universalpackages_linuxmac.zip
 2a5d95233ed5a2f2e3f237af412052bd1f70485dfbbc3f357ef8d0d176b2bc8e  update_universalpackages_linuxmac.zip
