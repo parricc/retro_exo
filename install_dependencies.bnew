@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 # Linux Dependency Setup For eXo Collections
-# Revised: 2024-04-23
+# Revised: 2024-07-22
 
 #--------------------------------------------------------------------------------------
 clear
 
-setupversion="Version 6.00.universal1-alpha2"
+setupversion="Version 6.04.universal1"
 
 [[ $0 == $BASH_SOURCE ]] && cd "$( dirname "$0")"
 scriptDir="$(cd "$( dirname "$BASH_SOURCE")" && pwd)"
@@ -57,7 +57,7 @@ function beginLinux
     clear
     printf "\n\e[1;31;40mWelcome to the eXo Dependency Installer.\e[0m\n\n%s\n%s\n%s\n\n" \
         "This setup will install the software required by the collection." \
-        "For this step to succeed, sudo access is required." \
+        "If system packages are needed, sudo access will be required." \
         "As such, you may be prompted for your password at various points."
     printf "Please choose one of the following:\n\n%s\e[1;37;45m%s\e[0m%s\n%s\e[1;37;45m%s\e[0m%s\n%s\e[1;37;45m%s\e[0m%s\n\n" \
         "[" "P" "]roceed with installation" "[" "D" "]ownload the latest setup" "[" "A" "]bort installation" 
@@ -180,6 +180,9 @@ function goapt
         fi
         if ! [ `which sha256sum` ]
         then
+            echo "Sha256sum is not present. Attempting to install..."
+            sudo apt update
+            [ $? != 0 ] && failedinstall
             sudo apt install -y coreutils
             [ $? != 0 ] && failedinstall
         fi
@@ -194,27 +197,29 @@ function goapt
         goupdate
         exit 1
     else
-        printf "\nBeginning dependency installation...\n\nYou will now be prompted to enter your password (sudo access required).\n\n"
+        printf "\nBeginning dependency installation...\n\nIf a system package is needed, you will be prompted for your password (sudo).\n\n"
         if ! [ `which apt` ]
         then
             echo "Missing apt!"
             failedinstall
         fi
-        echo "Running apt update..."
-        sudo apt update
+        
         [ $? != 0 ] && failedinstall
         if ! [ `which fold` ]
         then
+            sudo apt update
             sudo apt install -y coreutils
             [ $? != 0 ] && failedinstall
         fi
         if ! [ `which sha256sum` ]
         then
+            sudo apt update
             sudo apt install -y coreutils
             [ $? != 0 ] && failedinstall
         fi
         if ! [ `which tput` ]
         then
+            sudo apt update
             sudo apt install -y ncurses-bin
             [ $? != 0 ] && failedinstall
         fi
@@ -223,6 +228,7 @@ function goapt
             if ! [ `which $check` ]
             then
                 echo "$check is not present. Attempting to install..."
+                sudo apt update
                 sudo apt install -y $check
                 [ $? != 0 ] && failedinstall
             fi
@@ -248,10 +254,17 @@ function goarch
             [ $? != 0 ] && failedinstall
             sudo pacman --noconfirm -S wget
             [ $? != 0 ] && failedinstall
+            sudo pacman --noconfirm -Sy
+            [ $? != 0 ] && failedinstall
         fi
         if ! [ `which sha256sum` ]
         then
+            echo "Sha256sum is not present. Updating packages and attempting to install..."
+            sudo pacman --noconfirm -Syu
+            [ $? != 0 ] && failedinstall
             sudo pacman --noconfirm -S coreutils
+            [ $? != 0 ] && failedinstall
+            sudo pacman --noconfirm -Sy
             [ $? != 0 ] && failedinstall
         fi
         if ! [ `which unzip` ]
@@ -261,32 +274,43 @@ function goarch
             [ $? != 0 ] && failedinstall
             sudo pacman --noconfirm -S unzip
             [ $? != 0 ] && failedinstall
+            sudo pacman --noconfirm -Sy
+            [ $? != 0 ] && failedinstall
         fi
         goupdate
         exit 1
     else
-        printf "\nBeginning dependency installation...\n\nYou will now be prompted to enter your password (sudo access required).\n\n"
+        printf "\nBeginning dependency installation...\n\nIf a system package is needed, you will be prompted for your password (sudo).\n\n"
         if ! [ `which pacman` ]
         then
             echo "Missing pacman!"
             failedinstall
         fi
-        echo "Updating already installed packages..."
-        sudo pacman --noconfirm -Syu
-        [ $? != 0 ] && failedinstall
         if ! [ `which fold` ]
         then
+            sudo pacman --noconfirm -Syu
+            [ $? != 0 ] && failedinstall
             sudo pacman --noconfirm -S coreutils
+            [ $? != 0 ] && failedinstall
+            sudo pacman --noconfirm -Sy
             [ $? != 0 ] && failedinstall
         fi
         if ! [ `which sha256sum` ]
         then
+            sudo pacman --noconfirm -Syu
+            [ $? != 0 ] && failedinstall
             sudo pacman --noconfirm -S coreutils
+            [ $? != 0 ] && failedinstall
+            sudo pacman --noconfirm -Sy
             [ $? != 0 ] && failedinstall
         fi
         if ! [ `which tput` ]
         then
+            sudo pacman --noconfirm -Syu
+            [ $? != 0 ] && failedinstall
             sudo pacman --noconfirm -S ncurses
+            [ $? != 0 ] && failedinstall
+            sudo pacman --noconfirm -Sy
             [ $? != 0 ] && failedinstall
         fi
         for check in curl ffmpeg flatpak perl python3 sed unzip wget zip
@@ -294,13 +318,14 @@ function goarch
             if ! [ `which $check` ]
             then
                 echo "$check is not present. Attempting to install..."
+                sudo pacman --noconfirm -Syu
+                [ $? != 0 ] && failedinstall
                 sudo pacman --noconfirm -S $check
+                [ $? != 0 ] && failedinstall
+                sudo pacman --noconfirm -Sy
                 [ $? != 0 ] && failedinstall
             fi
         done
-        echo "Refreshing package list..."
-        sudo pacman --noconfirm -Sy
-        [ $? != 0 ] && failedinstall
 
         extractPackages
         installflatpaks
@@ -324,6 +349,7 @@ function godnf
         fi
         if ! [ `which sha256sum` ]
         then
+            echo "Sha256sum is not present. Attempting to install..."
             sudo dnf install -y coreutils
             [ $? != 0 ] && failedinstall
         fi
@@ -336,7 +362,7 @@ function godnf
         goupdate
         exit 1
     else
-        printf "\nBeginning dependency installation...\n\nYou will now be prompted to enter your password (sudo access required).\n\n"
+        printf "\nBeginning dependency installation...\n\nIf a system package is needed, you will be prompted for your password (sudo).\n\n"
         if ! [ `which dnf` ]
         then
             echo "Missing dnf!"
@@ -380,7 +406,7 @@ function goupdate
     [ -e "install_dependencies.cnew" ] && rm install_dependencies.cnew
     [ -e "install_dependencies.bnew" ] && rm install_dependencies.bnew
     [ -e "update_universalpackages_linuxmac.zip" ] && rm update_universalpackages_linuxmac.zip
-    wget "https://github.com/parricc/retro_exo/raw/main/ver_universal_linuxmac.txt" -O ver_universal_linuxmac.txt
+    wget "https://github.com/exoscoriae/eXoDOS/raw/master/linux_mac/ver_universal_linuxmac.txt" -O ver_universal_linuxmac.txt
     if [ ! -e "ver_universal_linuxmac.txt" ]
     then
         printf "\n\e[1;31;47mFailed to retrieve update information.\e[0m\n\n"
@@ -424,6 +450,7 @@ function goupdate
             printf "\n\n"
             exit 1
         fi
+        chmod +x install_dependencies.cnew
         echo "$universal_depmac_sum" | sha256sum --check
         if [ $? != 0 ]
         then
@@ -505,23 +532,23 @@ function goupdate
 
 function installflatpaks
 {
-    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     [ $? != 0 ] && failedinstall
     if [ `flatpak list 2>/dev/null | grep DOSBox | wc -l` -gt 0 ]
     then
         echo "Removing deprecated eXoDOS DOSBox flatpaks."
-        [[ `flatpak list 2>/dev/null | grep "com\.dosbox\.DOSBox-X"` ]] && sudo flatpak remove -y com.dosbox.DOSBox-X 2>/dev/null
-        [[ `flatpak list 2>/dev/null | grep "com\.dosbox\.DOSBox-ECE-r4358"` ]] && sudo flatpak remove -y com.dosbox.DOSBox-ECE-r4358 2>/dev/null
-        [[ `flatpak list 2>/dev/null | grep "com\.dosbox\.DOSBox-ECE-r4301"` ]] && sudo flatpak remove -y com.dosbox.DOSBox-ECE-r4301 2>/dev/null
-        [[ `flatpak list 2>/dev/null | grep "com\.dosbox\.DOSBox-ECE"` ]] && sudo flatpak remove -y com.dosbox.DOSBox-ECE 2>/dev/null
+        [[ `flatpak list 2>/dev/null | grep "com\.dosbox\.DOSBox-X"` ]] && flatpak remove -y com.dosbox.DOSBox-X 2>/dev/null
+        [[ `flatpak list 2>/dev/null | grep "com\.dosbox\.DOSBox-ECE-r4358"` ]] && flatpak remove -y com.dosbox.DOSBox-ECE-r4358 2>/dev/null
+        [[ `flatpak list 2>/dev/null | grep "com\.dosbox\.DOSBox-ECE-r4301"` ]] && flatpak remove -y com.dosbox.DOSBox-ECE-r4301 2>/dev/null
+        [[ `flatpak list 2>/dev/null | grep "com\.dosbox\.DOSBox-ECE"` ]] && flatpak remove -y com.dosbox.DOSBox-ECE 2>/dev/null
     fi
     echo "Installing retro_exo flatpaks..."
     for pkg in ./eXo/Flatpaks/*.flatpak
     do
-        sudo flatpak update -y
+        flatpak update --user -y
         [ $? != 0 ] && failedinstall
-        flatpak info "`basename "${pkg%.*}"`" &>/dev/null && sudo flatpak remove -y "`basename "${pkg%.*}"`"
-        sudo flatpak install --reinstall -y "$pkg"
+        flatpak info "`basename "${pkg%.*}"`" &>/dev/null && flatpak remove -y "`basename "${pkg%.*}"`"
+        flatpak install --user --reinstall -y "$pkg"
         [ $? != 0 ] && failedinstall
         #https://github.com/flatpak/flatpak/pull/5546
         #Note that --reinstall will not work until the above flatpak pull request is rolled out, work around implemented in prior line
